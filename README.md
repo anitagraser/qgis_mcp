@@ -1,16 +1,9 @@
-# QGISMCP - QGIS Model Context Protocol Integration
+# QGISMCP4Ollama - QGIS Model Context Protocol Integration
 
-QGISMCP connects [QGIS](https://qgis.org/) to [Claude AI](https://claude.ai/chat) through the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/docs/getting-started/intro), allowing Claude to directly interact with and control QGIS. This integration enables prompt assisted project creation, layer loading, code execution and more.
+QGISMCP4Ollama connects [QGIS](https://qgis.org/) to any Ollama-hosted LLM through the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/docs/getting-started/intro), allowing agentic interacations with and control of QGIS. This integration enables prompt assisted project creation, layer loading, code execution and more.
 
-This project is strongly based on the [BlenderMCP](https://github.com/ahujasid/blender-mcp/tree/main) project by [Siddharth Ahuja](https://x.com/sidahuj)
+This project is strongly based on the [BlenderMCP](https://github.com/ahujasid/blender-mcp/tree/main) project by [Siddharth Ahuja](https://x.com/sidahuj) and [QGIS MCP](https://github.com/jjsantos01/qgis_mcp) by [Juan Santos Ochoa](https://github.com/jjsantos01)    
 
-## Features
-
-- **Two-way communication**: Connect Claude AI to QGIS through a socket-based server.
-- **Project manipulation**: Create, load and save projects in QGIS.
-- **Layer manipulation**: Add and remove vector or raster layers to a project.
-- **Execute processing**: Execute processing algorithms ([Processing Toolbox](https://docs.qgis.org/3.40/en/docs/user_manual/processing/toolbox.html)).
-- **Code execution**: Run arbitrary Python code in QGIS from Claude. Very powerful, but also be very cautious using this tool.
 
 ## Components
 
@@ -23,84 +16,37 @@ The system consists of two main components:
 
 ### Prerequisites
 
-- QGIS 3.X (only tested on 3.22)
-- Claude desktop
-- Python 3.10 or newer
-- uv package manager:
+- QGIS 3.X (tested with 3.38)
+- Ollama an model with support for agents (tested with ministral-3:latest)
 
-If you're on Mac, please install uv as
+For the MCP server Python environment: 
 
-```bash
-brew install uv
-```
-
-On Windows Powershell
-
-```bash
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
-
-Otherwise installation instructions are on their website: [Install uv](https://docs.astral.sh/uv/getting-started/installation/)
-
-**⚠️ Do not proceed before installing UV**
-
-### Download code
-
-Download this repo to your computer. You can clone it with:
-
-```bash
-git clone git@github.com:jjsantos01/qgis_mcp.git
-```
+`pip install fastmcp ollama requests lupa`
 
 ### QGIS plugin
 
 You need to copy the folder [qgis_mcp_plugin](/qgis_mcp_plugin/) and its content on your QGIS profile plugins folder.
 
-You can get your profile folder in QGIS going to menu `Settings` -> `User profiles` -> `Open active profile folder` Then, go to `Python/plugins` and paste the folder `qgis_mcp_plugin`.
-
-> On a Windows machine the plugins folder is usually located at: `C:\Users\USER\AppData\Roaming\QGIS\QGIS3\profiles\default\python\plugins` 
-
-and on MacOS: `~/Library/Application\ Support/QGIS/QGIS3/profiles/default/python/plugins`
-
- Then close QGIS and open it again. Go to the menu option `Plugins` > `Installing and Managing Plugins`, select the `All` tab and search for "QGIS MCP", then mark the QGIS MCP checkbox.
-
-### Claude for Desktop Integration
-
-Go to `Claude` > `Settings` > `Developer` > `Edit Config` > `claude_desktop_config.json` to include the following:
-
-> If you can't find the "Developers tab" or the `claude_desktop_config.json` look at this [documentation](https://modelcontextprotocol.io/quickstart/user#2-add-the-filesystem-mcp-server).
-
-```json
-{
-    "mcpServers": {
-        "qgis": {
-            "command": "uv",
-            "args": [
-                "--directory",
-                "/ABSOLUTE/PATH/TO/PARENT/REPO/FOLDER/qgis_mcp/src/qgis_mcp",
-                "run",
-                "qgis_mcp_server.py"
-            ]
-        }
-
-    }
-}
-```
 
 ## Usage
 
-### Starting the Connection
+### Starting the connection in QGIS
 
 1. In QGIS, go to `plugins` > `QGIS MCP` > `QGIS MCP`
     ![plugins menu](/assets/imgs/qgis-plugins-menu.png)
 2. Click "Start Server"
     ![start server](/assets/imgs/qgis-mcp-start-server.png)
+    Will launch on localhost:9876 by default.
+3. Check the logs to see the connection status 
+    ![alt text](/assets/imgs/qgis-log.png)
 
-### Using with Claude
+### Starting the QGIS_MCP server
 
-Once the config file has been set on Claude, and the server is running on QGIS, you will see a hammer icon with tools for the QGIS MCP.
+`python src/qgis_mcp/qgis_mcp_server.py `
 
-![Claude tools](assets/imgs/claude-available-tools.png)
+Will launch on localhost:9877/sse by default.
+
+![alt text](/assets/imgs/fast-mcp.png)
 
 #### Tools
 
@@ -120,19 +66,12 @@ Once the config file has been set on Claude, and the server is running on QGIS, 
 - `render_map` - Render the current map view to an image file
 - `execute_code` - Execute arbitrary PyQGIS code provided as a string
 
-### Example Commands
+### Starting the conversation
 
-This is the example I used for the [demo](https://x.com/jjsantoso/status/1900293848271667395):
+You can launch an example conversation using: 
 
-```plain
-You have access to the tools to work with QGIS. You will do the following:
-	1. Ping to check the connection. If it works, continue with the following steps.
-	2. Create a new project and save it at: "C:/Users/USER/GitHub/qgis_mcp/data/cdmx.qgz"
-	3. Load the vector layer: ""C:/Users/USER/GitHub/qgis_mcp/data/cdmx/mgpc_2019.shp" and name it "Colonias".
-	4. Load the raster layer: "C:/Users/USER/GitHub/qgis_mcp/data/09014.tif" and name it "BJ"
-	5. Zoom to the "BJ" layer.
-	6. Execute the centroid algorithm on the "Colonias" layer. Skip the geometry check. Save the output to "colonias_centroids.geojson".
-	7. Execute code to create a choropleth map using the "POB2010" field in the "Colonias" layer. Use the quantile classification method with 5 classes and the Spectral color ramp.
-	8. Render the map to "C:/Users/USER/GitHub/qgis_mcp/data/cdmx.png"
-	9. Save the project.
-```
+`python src/qgis_mcp/qgis_mcp_client.py `
+
+Note: you need to update the project file path to point to a project file on your machine. 
+
+![alt text](/assets/imgs/convo.png)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-QGIS MCP Client - Simple client to connect to the QGIS MCP server
+QGIS MCP Servers
 """
 
 import logging
@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 import socket
 import json
 from typing import AsyncIterator, Dict, Any
-from mcp.server.fastmcp import FastMCP, Context
+from fastmcp import FastMCP, Context
 
 logging.basicConfig(level=logging.INFO, 
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -138,8 +138,8 @@ async def server_lifespan(server: FastMCP) -> AsyncIterator[Dict[str, Any]]:
         logger.info("QgisMCPServer server shut down")
 
 mcp = FastMCP(
-    "Qgis_mcp",
-    description="Qgis integration through the Model Context Protocol",
+    "QGIS_MCP",
+    #description="Qgis integration through the Model Context Protocol",
     lifespan=server_lifespan
 )
 
@@ -264,7 +264,7 @@ def execute_code(ctx: Context, code: str) -> str:
 
 def main():
     """Run the MCP server"""
-    mcp.run()
+    mcp.run(transport="sse", port=9877)
 
 if __name__ == "__main__":
     main()

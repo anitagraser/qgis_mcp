@@ -1,11 +1,11 @@
 [general]
-name=QGIS MCP
-description=Servidor socket para ejecutar comandos MCP en QGIS
+name=QGISMCP4Ollama
+description=QGISMCP4Ollama connects QGIS to an MCP Server
 version=1.0
 qgisMinimumVersion=3.0
-author=TuNombre
-email=tu_correo@example.com
+author=TuNombre & Anita Graser
+email=anitagraser@gmx.at
 category=Plugins
 
 [about]
-about=Este plugin inicia un servidor MCP en QGIS para permitir la ejecución de comandos desde un LLM.
+about=QGIS MCP connects QGIS to an MCP Server
