@@ -1,4 +1,6 @@
-# client_ollama.py
+# Based on the MCP client script by Ajit Kumar
+# https://dev.to/ajitkumar/building-your-first-agentic-ai-complete-guide-to-mcp-ollama-tool-calling-2o8g
+
 import json
 import ollama
 from fastmcp import Client as MCPClient
