@@ -17,15 +17,12 @@ The system consists of two main components:
 ### Prerequisites
 
 - QGIS 3.X (tested with 3.38)
-- Ollama an model with support for agents (tested with ministral-3:latest)
-
-For the MCP server Python environment: 
-
-`pip install fastmcp ollama requests lupa`
+- Ollama and model with support for agents (tested with ministral-3:latest)
+- For the MCP server Python environment: `pip install fastmcp ollama requests lupa`
 
 ### QGIS plugin
 
-You need to copy the folder [qgis_mcp_plugin](/qgis_mcp_plugin/) and its content on your QGIS profile plugins folder.
+To install the plugin, you need to copy the folder [qgis_mcp_plugin](/qgis_mcp_plugin/) and its content into your QGIS plugins folder.
 
 
 ## Usage
@@ -44,7 +41,7 @@ You need to copy the folder [qgis_mcp_plugin](/qgis_mcp_plugin/) and its content
 
 `python src/qgis_mcp/qgis_mcp_server.py `
 
-Will launch on localhost:9877/sse by default.
+Will launch on localhost:9877/sse by default:
 
 ![alt text](/assets/imgs/fast-mcp.png)
 
@@ -72,6 +69,6 @@ You can launch an example conversation using:
 
 `python src/qgis_mcp/qgis_mcp_client.py `
 
-Note: you need to update the project file path to point to a project file on your machine. 
-
 ![alt text](/assets/imgs/convo.png)
+
+Note: you need to update the project file path to point to a project file on your machine. 
