@@ -534,7 +534,7 @@ class QgisMCPDockWidget(QDockWidget):
         self.port_spin.setMinimum(1024)
         self.port_spin.setMaximum(65535)
         self.port_spin.setValue(9876)
-        layout.addRow("Server Port:", self.port_spin)
+        layout.addRow("Port:", self.port_spin)
 
         # Add server control buttons
         buttons_layout = QHBoxLayout()
