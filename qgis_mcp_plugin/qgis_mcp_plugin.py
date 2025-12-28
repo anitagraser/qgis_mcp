@@ -40,7 +40,7 @@ class QgisMCPPluginServer(QObject):
             
             QgsMessageLog.logMessage(
                 f"MCP plugin listening on {self.host}:{self.port}", 
-                "QGIS MCP"
+                "QGIS MCP", Qgis.Info
                 )
             return True
         except Exception as e:
@@ -64,7 +64,7 @@ class QgisMCPPluginServer(QObject):
             
         self.socket = None
         self.client = None
-        QgsMessageLog.logMessage("MCP plugin stopped", "QGIS MCP")
+        QgsMessageLog.logMessage("MCP plugin stopped", "QGIS MCP", Qgis.Info)
     
     def process_server(self):
         if not self.running:
@@ -76,7 +76,7 @@ class QgisMCPPluginServer(QObject):
                 try:
                     self.client, address = self.socket.accept()
                     self.client.setblocking(False)
-                    QgsMessageLog.logMessage(f"Connected to client: {address}", "QGIS MCP")
+                    QgsMessageLog.logMessage(f"Connected to client: {address}", "QGIS MCP", Qgis.Info)
                 except BlockingIOError:
                     pass  # No connection waiting
                 except Exception as e:
@@ -104,7 +104,7 @@ class QgisMCPPluginServer(QObject):
                                 pass
                         else:
                             # Connection closed by client
-                            QgsMessageLog.logMessage("Client disconnected", "QGIS MCP")
+                            QgsMessageLog.logMessage("Client disconnected", "QGIS MCP", Qgis.Info)
                             self.client.close()
                             self.client = None
                             self.buffer = b''
@@ -152,9 +152,9 @@ class QgisMCPPluginServer(QObject):
             handler = handlers.get(cmd_type)
             if handler:
                 try:
-                    QgsMessageLog.logMessage(f"Executing handler for {cmd_type}", "QGIS MCP")
+                    QgsMessageLog.logMessage(f"Executing handler for {cmd_type}", "QGIS MCP", Qgis.Info)
                     result = handler(**params)
-                    QgsMessageLog.logMessage(f"Handler execution complete", "QGIS MCP")
+                    QgsMessageLog.logMessage(f"Handler execution complete", "QGIS MCP", Qgis.Info)
                     return {"status": "success", "result": result}
                 except Exception as e:
                     QgsMessageLog.logMessage(f"Error in handler: {str(e)}", "QGIS MCP", Qgis.Critical)
