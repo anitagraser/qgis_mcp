@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger("QgisMCPServer")
 
-class QgisMCPServer:
+class QgisConnection:
     def __init__(self, host='localhost', port=9876):
         self.host = host
         self.port = port
@@ -99,7 +99,7 @@ def get_qgis_connection():
     
     # Create a new connection if needed
     if _qgis_connection is None:
-        _qgis_connection = QgisMCPServer(host="localhost", port=9876)
+        _qgis_connection = QgisConnection(host="localhost", port=9876)
         if not _qgis_connection.connect():
             logger.error("Failed to connect to Qgis")
             _qgis_connection = None
